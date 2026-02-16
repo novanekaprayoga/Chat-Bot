@@ -169,3 +169,33 @@ Untuk menambah fitur:
 3. Tambah event listeners sesuai kebutuhan
 
 Enjoy! 🎉
+
+## **GitHub & Deploy**
+
+- **Jangan commit secrets**: Pastikan file `.env` tidak dimasukkan ke repo. `.gitignore` sudah menyertakan `.env`.
+- **Menyiapkan repository GitHub**:
+
+```bash
+# Di folder project
+git init
+git add .
+git commit -m "Initial commit"
+git remote add origin https://github.com/USERNAME/REPO_NAME.git
+git branch -M main
+git push -u origin main
+```
+
+- **Jika push ditolak karena secret scanning**: hapus nilai sensitif dari file yang berisi key (contoh: `.env.example`) lalu `git commit --amend` dan `git push`.
+- **Gunakan Personal Access Token (PAT)** untuk autentikasi saat push jika diminta password. Buat PAT di: https://github.com/settings/tokens (berikan scope `repo`).
+
+- **Membuat release/tag** (opsional):
+
+```bash
+# Buat tag versi
+git tag -a v1.0.0 -m "v1.0.0"
+git push origin v1.0.0
+```
+
+- **CI / Deployment**: Untuk deploy, simpan secrets di CI (GitHub Actions Secrets) bukan di repo. Gunakan server backend untuk menyimpan API keys di environment variables.
+
+Jika mau, saya bisa buatkan `CONTRIBUTING.md` atau release draft untuk repo Anda.
