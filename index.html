@@ -3,17 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Bot</title>
+    <title>ChatBot Modern</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100">
-        <div class="chatbot-container">
-            <!-- Header -->
+    <div class="chat-app-wrapper">
+        <!-- Sidebar (Conversations List) -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>💬 Conversations</h2>
+                <button class="btn-sidebar-close" id="toggleSidebarBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <button class="btn-new-chat" id="newChatBtn">
+                <i class="fas fa-plus"></i> New Chat
+            </button>
+
+            <div class="conversations-list" id="conversationsList">
+                <!-- Conversations will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main">
+            <div class="container-fluid d-flex justify-content-center chat-background">
+                <div class="chatbot-container">
+                    <!-- Header -->
             <div class="chatbot-header">
-                <h3 class="mb-0">Chat Bot</h3>
-                <p class="text-muted mb-0 small">Online</p>
+                <div class="d-flex align-items-center gap-3">
+                            <button class="btn-sidebar-toggle" id="toggleSidebarBtn">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <div class="bot-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div>
+                                <h3 class="mb-0 header-title" id="chatTitle">ChatBot AI</h3>
             </div>
 
             <!-- Chat Messages -->
@@ -25,25 +54,34 @@
                 </div>
             </div>
 
-            <!-- Settings Button -->
-            <div class="settings-btn-wrapper">
-                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#settingsModal">
-                    ⚙️ Pengaturan
+            <!-- Top Controls -->
+            <div class="chat-controls">
+                <button class="btn-icon-control" id="searchBtn" title="Cari pesan">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="btn-icon-control" id="exportBtn" title="Export chat">
+                    <i class="fas fa-download"></i>
+                </button>
+                <button class="btn-icon-control" id="clearChatBtn" title="Hapus chat">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+                <button class="btn-icon-control" data-bs-toggle="modal" data-bs-target="#settingsModal" title="Pengaturan">
+                    <i class="fas fa-cog"></i>
                 </button>
             </div>
 
             <!-- Chat Input -->
             <div class="chatbot-input-area">
-                <div class="input-group">
+                <div class="input-wrapper">
                     <input 
                         type="text" 
-                        class="form-control" 
+                        class="chat-input" 
                         id="userInput" 
-                        placeholder="Ketik pesan..."
+                        placeholder="Ketik pesan Anda..."
                         autocomplete="off">
-                    <button class="btn btn-primary" type="button" id="sendBtn">
+                    <button class="btn-send" type="button" id="sendBtn">
                         <span class="spinner-border spinner-border-sm d-none" id="loadingSpinner" role="status" aria-hidden="true"></span>
-                        <span id="sendBtnText">Kirim</span>
+                        <i class="fas fa-paper-plane" id="sendBtnIcon"></i>
                     </button>
                 </div>
             </div>
@@ -52,42 +90,74 @@
 
     <!-- Settings Modal -->
     <div class="modal fade" id="settingsModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Pengaturan Chatbot</h5>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content settings-modal">
+                <div class="modal-header settings-header">
+                    <div>
+                        <h5 class="modal-title">
+                            <i class="fas fa-sliders-h"></i> Pengaturan Chatbot
+                        </h5>
+                        <p class="modal-subtitle">Kustomisasi pengalaman chat Anda</p>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="apiProvider" class="form-label">Provider API:</label>
-                        <select class="form-select" id="apiProvider">
+                <div class="modal-body settings-body">
+                    <div class="settings-section">
+                        <label for="apiProvider" class="form-label settings-label">
+                            <i class="fas fa-plug"></i> Provider API
+                        </label>
+                        <select class="form-select settings-select" id="apiProvider">
                             <option value="local">Local (Responses Lokal)</option>
                             <option value="openai">OpenAI GPT</option>
                             <option value="groq">Groq API</option>
                         </select>
-                        <small class="text-muted">API key disimpan di server (.env), bukan di browser</small>
+                        <small class="settings-hint">API key disimpan di server (.env), bukan di browser</small>
                     </div>
-                    <div class="mb-3">
-                        <label for="modelSelect" class="form-label">Model:</label>
-                        <select class="form-select" id="modelSelect">
+                    <div class="settings-section">
+                        <label for="modelSelect" class="form-label settings-label">
+                            <i class="fas fa-brain"></i> Model AI
+                        </label>
+                        <select class="form-select settings-select" id="modelSelect">
                             <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
                             <option value="gpt-4">GPT-4</option>
                             <option value="gpt-4-turbo">GPT-4 Turbo</option>
                             <option value="llama-3.3-70b-versatile">Llama 3.3 70B</option>
                         </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="temperatureSlider" class="form-label">
-                            Temperature: <span id="tempValue">0.7</span>
+                    <div class="settings-section">
+                        <label for="temperatureSlider" class="form-label settings-label">
+                            <i class="fas fa-thermometer-half"></i> Temperature: <span id="tempValue" class="temp-badge">0.7</span>
                         </label>
-                        <input type="range" class="form-range" id="temperatureSlider" min="0" max="2" step="0.1" value="0.7">
-                        <small class="text-muted">0 = Konsisten, 2 = Kreatif</small>
+                        <input type="range" class="form-range settings-range" id="temperatureSlider" min="0" max="2" step="0.1" value="0.7">
+                        <div class="temp-info">
+                            <span>🧊 Konsisten</span>
+                            <span>🔥 Kreatif</span>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary" id="saveSettingsBtn">Simpan</button>
+                <div class="modal-footer settings-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Tutup
+                    </button>
+                    <button type="button" class="btn btn-primary" id="saveSettingsBtn">
+                        <i class="fas fa-check"></i> Simpan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="modal fade" id="searchModal">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🔍 Cari dalam Chat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Cari pesan...">
+                    <div class="search-results mt-3" id="searchResults"></div>
                 </div>
             </div>
         </div>
@@ -96,6 +166,7 @@
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="script-advanced.js"></script>
 </body>
 </html>

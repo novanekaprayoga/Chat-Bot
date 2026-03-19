@@ -203,15 +203,29 @@ function scrollToBottom() {
 // Show loading spinner
 function showLoading() {
     $('#loadingSpinner').removeClass('d-none');
-    $('#sendBtnText').text('Menunggu...');
+    $('#sendBtnIcon').addClass('d-none');
     $('#sendBtn').prop('disabled', true);
 }
 
 // Hide loading spinner
 function hideLoading() {
     $('#loadingSpinner').addClass('d-none');
-    $('#sendBtnText').text('Kirim');
+    $('#sendBtnIcon').removeClass('d-none');
     $('#sendBtn').prop('disabled', false);
+}
+
+// Clear chat messages
+function clearChat() {
+    if (confirm('Apakah Anda yakin ingin menghapus semua pesan chat?')) {
+        $('#chatMessages').html(`
+            <div class="message bot-message">
+                <div class="message-content">
+                    <p>Halo! 👋 Saya adalah chatbot Anda. Ada yang bisa saya bantu?</p>
+                </div>
+            </div>
+        `);
+        scrollToBottom();
+    }
 }
 
 // Send message
@@ -271,6 +285,11 @@ $(document).ready(function() {
     // Save settings button
     $('#saveSettingsBtn').click(function() {
         saveSettings();
+    });
+
+    // Clear chat button
+    $('#clearChatBtn').click(function() {
+        clearChat();
     });
     
     // Focus input on load
